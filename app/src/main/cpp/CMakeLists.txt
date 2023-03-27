@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18.1)
+cmake_minimum_required(VERSION 3.22.1)
 
 
 project("png")
@@ -14,14 +14,10 @@ add_library(
 
         SHARED
 
-        com_wind_ndk_png_PngPlayer.cpp)
+        com_wind_ndk_png_PngPlayer.cpp
+        eglcore/egl_core.cpp
+)
 
-
-
-find_library(
-        log-lib
-
-        log)
 
 
 target_link_libraries(
@@ -31,4 +27,6 @@ target_link_libraries(
         pngDecoder
         renderer
         z
-        ${log-lib})
+        log
+        GLESv2
+        EGL)
