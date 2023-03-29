@@ -6,7 +6,7 @@
 #define LOG_TAG "PicPreviewController"
 
 PicPreviewController::PicPreviewController() :
-		_msg(MSG_NONE), previewSurface(0), eglCore(0) {
+		_msg(MSG_NONE) {
 	LOGI("VideoDutePlayerController instance created");
 	pthread_mutex_init(&mLock, NULL);
 	pthread_cond_init(&mCondition, NULL);
@@ -92,8 +92,8 @@ void PicPreviewController::renderLoop() {
 		}
 		_msg = MSG_NONE;
 
-		if (eglCore) {
-			eglCore->makeCurrent(previewSurface);
+		if (windowSurface) {
+			windowSurface->makeCurrent();
 			this->drawFrame();
 			pthread_cond_wait(&mCondition, &mLock);
 			usleep(100 * 1000);
@@ -107,10 +107,12 @@ void PicPreviewController::renderLoop() {
 }
 
 bool PicPreviewController::initialize() {
-	eglCore = new EGLCore();
+	EGLCore* eglCore = new EGLCore();
 	eglCore->init();
-	previewSurface = eglCore->createWindowSurface(_window);
-	eglCore->makeCurrent(previewSurface);
+	windowSurface=new WindowSurface(eglCore,_window);
+
+
+	windowSurface->makeCurrent();
 
 	picPreviewTexture = new PicPreviewTexture();
 	bool createTexFlag = picPreviewTexture->createTexture();
@@ -138,10 +140,9 @@ void PicPreviewController::destroy() {
 		delete renderer;
 		renderer = NULL;
 	}
-	if(eglCore){
-		eglCore->releaseSurface(previewSurface);
-		eglCore->release();
-		eglCore = NULL;
+	if(windowSurface){
+		windowSurface->releaseEglSurface();
+		windowSurface = NULL;
 	}
 	return;
 }
@@ -162,7 +163,7 @@ void PicPreviewController::updateTexImage() {
 
 void PicPreviewController::drawFrame() {
 	renderer->render();
-	if (!eglCore->swapBuffers(previewSurface)) {
+	if (!windowSurface->swapBuffers()) {
 		LOGE("eglSwapBuffers() returned error %d", eglGetError());
 	}
 }

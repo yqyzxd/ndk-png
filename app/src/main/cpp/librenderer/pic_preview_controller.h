@@ -9,11 +9,11 @@
 #include <EGL/eglext.h>
 #include "./pic_preview_render.h"
 #include "./pic_preview_texture.h"
-#include "./egl_core.h"
 
 #include "../pngdecoder/asset_png_decoder.h"
 #include "../pngdecoder/file_png_decoder.h"
 #include "../pngdecoder/png_decoder.h"
+#include "../libgles/egl/window_surface.h"
 
 class PicPreviewController {
 public:
@@ -44,8 +44,7 @@ private:
 	// android window, supported by NDK r5 and newer
 	ANativeWindow* _window;
 
-	EGLCore* eglCore;
-	EGLSurface previewSurface;
+	WindowSurface* windowSurface=0;
 
 	// Helper method for starting the thread
 	static void* threadStartCallback(void *myself);

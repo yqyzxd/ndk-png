@@ -7,12 +7,14 @@ add_library(
 
         STATIC
 
-        egl_core.cpp
+
         pic_preview_controller.cpp
         pic_preview_render.cpp
         pic_preview_texture.cpp
         rgba_frame.cpp
-
+        png_player.cpp
+        png_renderer.cpp
+        png_filter.cpp
 
 )
 

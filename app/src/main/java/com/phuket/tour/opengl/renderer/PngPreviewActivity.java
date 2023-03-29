@@ -21,7 +21,7 @@ public class PngPreviewActivity extends Activity {
 	private SurfaceView surfaceView;
 	private RelativeLayout preview_parent_layout;
 
-	private String picPath = "/storage/emulated/0/Android/data/com.wind.ndk.png/files/1.png";
+	private String picPath = "/storage/emulated/0/Android/data/com.wind.ndk.png/files/2.png";
 	
 	private PngPreviewController pngPreviewController;
 	private Callback previewCallback = new Callback() {
@@ -32,6 +32,7 @@ public class PngPreviewActivity extends Activity {
 			//pngPreviewController.init(picPath);
 			pngPreviewController.init(assetPath,getAssets());
 			pngPreviewController.setSurface(holder.getSurface());
+
 		}
 
 		public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {

@@ -1,15 +1,18 @@
 cmake_minimum_required(VERSION 3.22.1)
 
 
-project("native")
+project("png")
 
 include_directories(librenderer)
 add_subdirectory(librenderer)
 
 
-
 include_directories(pngdecoder)
 add_subdirectory(pngdecoder)
+
+include_directories(libgles/egl)
+include_directories(libgles/gles)
+add_subdirectory(libgles)
 
 add_library(
         native
@@ -29,6 +32,7 @@ target_link_libraries(
         android
         jnigraphics
         pngdecoder
+        eglcore
         renderer
         z
         log
