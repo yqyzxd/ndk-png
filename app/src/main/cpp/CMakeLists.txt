@@ -1,30 +1,34 @@
 cmake_minimum_required(VERSION 3.22.1)
 
 
-project("png")
+project("native")
 
 include_directories(librenderer)
 add_subdirectory(librenderer)
 
-include_directories(libpng)
-add_subdirectory(libpng)
+
+
+include_directories(pngdecoder)
+add_subdirectory(pngdecoder)
 
 add_library(
-        png
+        native
 
         SHARED
 
-        com_wind_ndk_png_PngPlayer.cpp
-        eglcore/egl_core.cpp
+        com_phuket_tour_opengl_renderer_PngPreviewController.h
+        PngPreviewController.cpp
 )
 
 
 
 target_link_libraries(
-        png
+        native
         # Links the target library to the log library
         # included in the NDK.
-        pngDecoder
+        android
+        jnigraphics
+        pngdecoder
         renderer
         z
         log
