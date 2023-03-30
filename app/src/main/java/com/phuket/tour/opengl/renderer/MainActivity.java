@@ -3,6 +3,7 @@ package com.phuket.tour.opengl.renderer;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;

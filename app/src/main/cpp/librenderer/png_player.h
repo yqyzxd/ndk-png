@@ -25,6 +25,7 @@ private:
     PngDecoder* decoder;
 
 
+    static void updateTexImage(void *param);
 };
 
 

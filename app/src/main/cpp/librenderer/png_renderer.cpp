@@ -54,7 +54,7 @@ void PngRenderer::updateTexImage(void *bytes, int width, int height) {
 
 
 void PngRenderer::onDrawFrame() {
-    if (texture==NULL){
+    if (texture==NULL || pngFilter==NULL){
         return;
     }
     pngFilter->onDrawFrame(texture->getTextureId());
