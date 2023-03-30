@@ -35,7 +35,7 @@ public:
 
 protected:
     EGLCore* mEGLCore;
-    EGLSurface mEGLSurface;
+    EGLSurface mEGLSurface=EGL_NO_SURFACE;
     int mWidth;
     int mHeight;
 };

@@ -4,7 +4,8 @@
 
 #include "png_filter.h"
 #include "../libgles/gles/gl_utils.h"
-
+#include "../libcommon/CommonTools.h"
+#define LOG_TAG "PngFilter"
 PngFilter::PngFilter(const char *vertexSource, const char *fragmentSource)
         : BaseFilter(vertexSource, fragmentSource) {
 
@@ -18,6 +19,7 @@ PngFilter::PngFilter(const char *vertexSource, const char *fragmentSource)
 
 
 GLuint PngFilter::onDrawFrame(GLuint textureId) {
+    LOGE("onDrawFrame:%d",textureId);
     //设置一个颜色状态
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
     //使能颜色状态的值来清屏

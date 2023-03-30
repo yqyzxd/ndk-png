@@ -7,9 +7,9 @@
 
 
 #include "../libgles/egl/gl_renderer.h"
-#include "../libgles/gles//texture.h"
+#include "../libgles/gles/texture.h"
 #include "png_filter.h"
-
+#include "../libcommon/CommonTools.h"
 class PngRenderer: public GLRenderer{
 
 private:
@@ -18,14 +18,11 @@ private:
     Texture* texture=0;
 public:
     PngRenderer();
-
-    virtual void surfaceCreated();
-
-    virtual void surfaceChanged(int width, int height);
-
-    virtual void surfaceDestroyed();
-
-    virtual void onDrawFrame();
+    ~PngRenderer();
+     void surfaceCreated() override;
+     void surfaceChanged(int width, int height) override;
+     void surfaceDestroyed() override;
+     void onDrawFrame() override;
 
     void updateTexImage(void* bytes,int width,int height);
 };

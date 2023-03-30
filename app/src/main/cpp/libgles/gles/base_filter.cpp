@@ -9,9 +9,9 @@
 #define LOG_TAG "BaseFilter"
 BaseFilter::BaseFilter(const char *vertexSource, const char *fragmentSource) {
 
-    LOGE( "BaseFilter");
+    LOGE( "before createProgram");
     mProgram=createProgram(vertexSource,fragmentSource);
-    LOGE( "BaseFilter mProgram:%d",mProgram);
+    LOGE( "after createProgram mProgram:%d",mProgram);
     checkGlError("createProgram");
 }
 

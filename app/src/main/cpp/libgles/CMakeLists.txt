@@ -11,7 +11,6 @@ add_library(
         egl/base_egl_surface.cpp
         egl/window_surface.cpp
         egl/offscreen_surface.cpp
-        egl/gl_renderer.cpp
         egl/gl_surface.cpp
         gles/base_filter.cpp
         gles/gl_utils.cpp

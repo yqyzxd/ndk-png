@@ -21,8 +21,8 @@ void GLSurface::setRenderer(GLRenderer *renderer) {
         //already started
         return;
     }
-    mRenderThreadStarted= true;
-    LOGE("GLSurface::setRenderer");
+
+    LOGE("setRenderer");
     this->mRenderer=renderer;
     pthread_create(&_rendererThreadId,0,threadStartRoutine,this);
 }
@@ -32,21 +32,27 @@ GLRenderer *GLSurface::getRenderer() {
 }
 
 void GLSurface::surfaceCreated(ANativeWindow *window) {
-    LOGE("GLSurface::surfaceCreated");
+    pthread_mutex_lock(&mLock);
+    LOGE("surfaceCreated %d",mRenderThreadStarted);
     this->window=window;
     mSurfaceEvent=SURFACE_EVENT_CREATED;
+    pthread_mutex_unlock(&mLock);
 }
 
 void GLSurface::surfaceChanged(int width, int height) {
-    LOGE("GLSurface::surfaceChanged");
+    pthread_mutex_lock(&mLock);
+    LOGE("surfaceChanged %d",mRenderThreadStarted);
     mSurfaceEvent=SURFACE_EVENT_CHANGED;
     mSurfaceWidth=width;
     mSurfaceHeight=height;
+    pthread_mutex_unlock(&mLock);
 }
 
 void GLSurface::surfaceDestroyed() {
+    pthread_mutex_lock(&mLock);
     LOGE("GLSurface::surfaceDestroyed");
     mSurfaceEvent=SURFACE_EVENT_DESTROYED;
+    pthread_mutex_unlock(&mLock);
 
 }
 
@@ -58,20 +64,25 @@ void GLSurface::requestRender() {
     pthread_cond_signal(&mCond);
 }
 void GLSurface::renderLoop() {
+    mRenderThreadStarted= true;
+
     while (true){
         pthread_mutex_lock(&mLock);
+        //LOGE("renderLoop %d",SURFACE_EVENT_CREATED);
         switch (mSurfaceEvent) {
             case SURFACE_EVENT_CREATED:
+                mSurfaceEvent=SURFACE_EVENT_NONE;
                 if (mRenderer){
                     EGLCore* egl=new EGLCore();
                     egl->init();
                     mSurface=new WindowSurface(egl,window);
-                    LOGE("GLSurface::surfaceCreated before");
+                    LOGE("surfaceCreated before");
                     mRenderer->surfaceCreated();
-                    LOGE("GLSurface::surfaceCreated after");
+                    LOGE("surfaceCreated after");
                 }
                 break;
             case SURFACE_EVENT_CHANGED:
+                mSurfaceEvent=SURFACE_EVENT_NONE;
                 if (mRenderer){
                     mRenderer->surfaceChanged(mSurfaceWidth,mSurfaceHeight);
                     if (mRenderMode==RENDER_MODE_WHEN_DIRTY){
@@ -80,6 +91,7 @@ void GLSurface::renderLoop() {
                 }
                 break;
             case SURFACE_EVENT_DESTROYED:
+                mSurfaceEvent=SURFACE_EVENT_NONE;
                 if (mRenderer){
                     mRenderer->surfaceDestroyed();
                 }
@@ -88,13 +100,23 @@ void GLSurface::renderLoop() {
                 }
                 break;
         }
-        mSurfaceEvent=SURFACE_EVENT_NONE;
+
         if (mRenderMode == RENDER_MODE_WHEN_DIRTY){
             pthread_cond_wait(&mCond,&mLock);
         }
+
+
         if (mRenderer && mSurface){
+            if (mRunnable){
+                LOGE("GLSurface before run");
+                mRunnable->run();
+                mRunnable= nullptr;
+                LOGE("GLSurface after run");
+            }
             mSurface->makeCurrent();
+            LOGE("before onDrawFrame");
             mRenderer->onDrawFrame();
+            LOGE("after onDrawFrame");
             mSurface->swapBuffers();
         }
 

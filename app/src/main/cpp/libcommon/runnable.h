@@ -6,9 +6,16 @@
 #define NDK_PNG_RUNNABLE_H
 class Runnable {
 public:
-    Runnable(void (*run)(void*),void* param):run(run){}
+    Runnable(void (*runFp)(void*),void* params):runFp(runFp),params(params){}
 
-    void (*run)(void*);
+    void run(){
+        runFp(params);
+    }
+
+private:
+    void (*runFp)(void*);
     void* params;
+
+
 };
 #endif //NDK_PNG_RUNNABLE_H

@@ -21,8 +21,8 @@ public:
     void surfaceChanged(int width,int height);
     void surfaceDestroyed();
 private:
-    GLSurface* glSurface;
-    PngDecoder* decoder;
+    GLSurface* glSurface=0;
+    PngDecoder* decoder=0;
 
 
     static void updateTexImage(void *param);
