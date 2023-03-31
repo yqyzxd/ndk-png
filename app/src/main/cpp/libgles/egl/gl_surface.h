@@ -20,7 +20,7 @@ enum SurfaceEvent{
 class GLSurface {
 public:
     GLSurface();
-    virtual  ~GLSurface(){};
+    virtual  ~GLSurface();
 
     void setRenderMode(RenderMode mode);
     void setRenderer(GLRenderer* renderer);

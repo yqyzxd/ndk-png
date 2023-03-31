@@ -5,9 +5,14 @@
 #include "gl_surface.h"
 #define LOG_TAG "GLSurface"
 GLSurface::GLSurface() {
-    mRenderMode=RENDER_MODE_CONTINUOUSLY;
+    mRenderMode=RENDER_MODE_WHEN_DIRTY;
     pthread_mutex_init(&mLock,NULL);
     pthread_cond_init(&mCond,NULL);
+}
+
+GLSurface::~GLSurface() {
+    pthread_mutex_destroy(&mLock);
+    pthread_cond_destroy(&mCond);
 }
 
 void *GLSurface::threadStartRoutine(void *myself) {
@@ -45,7 +50,7 @@ void GLSurface::surfaceChanged(int width, int height) {
 
     pthread_mutex_lock(&mLock);
     while (!mSurface&&mRenderer){
-        //wait
+        //wait for surface
         pthread_cond_wait(&mCond,&mLock);
     }
     LOGE("surfaceChanged %d",mRenderThreadStarted);
@@ -92,6 +97,7 @@ void GLSurface::dealloc() {
     //等待线程结束
     pthread_join(_rendererThreadId, 0);
     mRenderThreadStarted= false;
+
     LOGE("GL THREAD dead");
 }
 void GLSurface::renderLoop() {
