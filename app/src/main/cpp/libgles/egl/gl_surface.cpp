@@ -5,7 +5,7 @@
 #include "gl_surface.h"
 #define LOG_TAG "GLSurface"
 GLSurface::GLSurface() {
-    mRenderMode=RENDER_MODE_CONTINUOUSLY;
+    mRenderMode=RENDER_MODE_WHEN_DIRTY;
     pthread_mutex_init(&mLock,NULL);
     pthread_cond_init(&mCond,NULL);
 }
@@ -36,6 +36,7 @@ void GLSurface::surfaceCreated(ANativeWindow *window) {
     LOGE("surfaceCreated %d",mRenderThreadStarted);
     this->window=window;
     mSurfaceEvent=SURFACE_EVENT_CREATED;
+    pthread_cond_signal(&mCond);
     pthread_mutex_unlock(&mLock);
 }
 
@@ -45,6 +46,7 @@ void GLSurface::surfaceChanged(int width, int height) {
     mSurfaceEvent=SURFACE_EVENT_CHANGED;
     mSurfaceWidth=width;
     mSurfaceHeight=height;
+    pthread_cond_signal(&mCond);
     pthread_mutex_unlock(&mLock);
 }
 
@@ -52,16 +54,23 @@ void GLSurface::surfaceDestroyed() {
     pthread_mutex_lock(&mLock);
     LOGE("GLSurface::surfaceDestroyed");
     mSurfaceEvent=SURFACE_EVENT_DESTROYED;
+    pthread_cond_signal(&mCond);
     pthread_mutex_unlock(&mLock);
 
 }
 
 void GLSurface::queueEvent(Runnable* runnable) {
+    pthread_mutex_lock(&mLock);
     mRunnable=runnable;
+    pthread_cond_signal(&mCond);
+    pthread_mutex_unlock(&mLock);
+
 }
 
 void GLSurface::requestRender() {
+    pthread_mutex_lock(&mLock);
     pthread_cond_signal(&mCond);
+    pthread_mutex_unlock(&mLock);
 }
 void GLSurface::renderLoop() {
     mRenderThreadStarted= true;
@@ -76,6 +85,7 @@ void GLSurface::renderLoop() {
                     EGLCore* egl=new EGLCore();
                     egl->init();
                     mSurface=new WindowSurface(egl,window);
+                    mSurface->makeCurrent();
                     LOGE("surfaceCreated before");
                     mRenderer->surfaceCreated();
                     LOGE("surfaceCreated after");
@@ -84,6 +94,7 @@ void GLSurface::renderLoop() {
             case SURFACE_EVENT_CHANGED:
                 mSurfaceEvent=SURFACE_EVENT_NONE;
                 if (mRenderer){
+                    mSurface->makeCurrent();
                     mRenderer->surfaceChanged(mSurfaceWidth,mSurfaceHeight);
                     if (mRenderMode==RENDER_MODE_WHEN_DIRTY){
                         requestRender();
@@ -98,12 +109,11 @@ void GLSurface::renderLoop() {
                 if (mSurface){
                     mSurface->release();
                 }
-                break;
+                LOGE("GL_THREAD FINISH");
+                return;
         }
 
-        if (mRenderMode == RENDER_MODE_WHEN_DIRTY){
-            pthread_cond_wait(&mCond,&mLock);
-        }
+
 
 
         if (mRenderer && mSurface){
@@ -119,7 +129,9 @@ void GLSurface::renderLoop() {
             LOGE("after onDrawFrame");
             mSurface->swapBuffers();
         }
-
+        if (mRenderMode == RENDER_MODE_WHEN_DIRTY){
+            pthread_cond_wait(&mCond,&mLock);
+        }
         pthread_mutex_unlock(&mLock);
     }
 }

@@ -43,7 +43,7 @@ private:
     GLRenderer* mRenderer=0;
     WindowSurface* mSurface=0;
 
-    RenderMode mRenderMode=RENDER_MODE_WHEN_DIRTY;
+    RenderMode mRenderMode=RENDER_MODE_CONTINUOUSLY;
 
     Runnable* mRunnable=0;
 
