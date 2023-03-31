@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">OpenGLRenderer</string>
+    <string name="app_name">ndk-png</string>
     <string name="display">Display Png</string>
     <string name="go">Go!</string>
     <string name="action_settings">Settings</string>

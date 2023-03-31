@@ -1,9 +1,9 @@
 #ifndef PIC_PREVIEW_RENDER_H
 #define PIC_PREVIEW_RENDER_H
 #include "../libcommon/CommonTools.h"
+#include "pic_preview_texture.h"
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
-#include "./pic_preview_texture.h"
 
 //Shader.frag文件内容
 static const char* PIC_PREVIEW_FRAG_SHADER_2 =

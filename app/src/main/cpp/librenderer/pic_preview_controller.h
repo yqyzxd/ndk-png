@@ -7,13 +7,12 @@
 #include <android/native_window.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
-#include "./pic_preview_render.h"
-#include "./pic_preview_texture.h"
 
 #include "../pngdecoder/asset_png_decoder.h"
 #include "../pngdecoder/file_png_decoder.h"
 #include "../pngdecoder/png_decoder.h"
 #include "../libgles/egl/window_surface.h"
+#include "pic_preview_render.h"
 
 class PicPreviewController {
 public:

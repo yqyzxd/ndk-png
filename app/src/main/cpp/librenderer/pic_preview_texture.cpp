@@ -9,9 +9,10 @@ PicPreviewTexture::~PicPreviewTexture() {
 }
 
 bool PicPreviewTexture::createTexture() {
-	LOGI("enter PicPreviewTexture::createTexture");
+
 	texture = 0;
 	int ret = initTexture();
+	LOGI("PicPreviewTexture::createTexture:%d",texture);
 	if (ret < 0) {
 		LOGI("init texture failed...");
 		this->dealloc();

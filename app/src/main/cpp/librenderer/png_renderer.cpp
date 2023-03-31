@@ -59,6 +59,7 @@ void PngRenderer::updateTexImage(void *bytes, int width, int height) {
     if (texture==NULL){
         texture=new Texture();
         texture->createTexture();
+
     }
     LOGE("before updateTexImage");
     texture->updateTexImage(bytes,width,height);
