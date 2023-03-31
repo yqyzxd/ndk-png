@@ -30,22 +30,29 @@ public:
     virtual void surfaceDestroyed(void);
     void requestRender();
     void queueEvent(Runnable* runnable);
+    virtual void dealloc();
 private:
     pthread_t _rendererThreadId=0;
     pthread_mutex_t mLock;
     pthread_cond_t mCond;
+    //是否结束渲染线程
+    bool mKillRendererThread= false;
+    //渲染线程是否已经启动
     bool mRenderThreadStarted= false;
+    //surface事件
     SurfaceEvent mSurfaceEvent= SURFACE_EVENT_NONE;
+
     int mSurfaceWidth;
     int mSurfaceHeight;
     ANativeWindow* window;
-
+    //渲染器
     GLRenderer* mRenderer=0;
+    //EGL Surface
     WindowSurface* mSurface=0;
-
+    //渲染模式
     RenderMode mRenderMode=RENDER_MODE_CONTINUOUSLY;
-
     Runnable* mRunnable=0;
+    bool mWakeUpFromDestoryed= false;
 
 
 private:
@@ -53,6 +60,7 @@ private:
 
     void renderLoop();
 
+    void releaseSurface();
 };
 
 

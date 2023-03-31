@@ -12,34 +12,40 @@ extern "C" {
  * Method:    init
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPreviewController_init
-  (JNIEnv *, jobject, jstring,jobject);
+JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPlayer_setDataSource
+  (JNIEnv *, jobject,jlong, jstring,jobject);
 
 /*
  * Class:     com_phuket_tour_opengl_renderer_PngPreviewController
  * Method:    setSurface
  * Signature: (Ljava/lang/Object;)V
  */
-JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPreviewController_setSurface
-  (JNIEnv *, jobject, jobject);
+JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPlayer_surfaceCreated
+  (JNIEnv *, jobject,jlong , jobject);
 
 /*
  * Class:     com_phuket_tour_opengl_renderer_PngPreviewController
  * Method:    resetSize
  * Signature: (II)V
  */
-JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPreviewController_resetSize
-  (JNIEnv *, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPlayer_surfaceChanged
+  (JNIEnv *, jobject,jlong, jint, jint);
 
 /*
  * Class:     com_phuket_tour_opengl_renderer_PngPreviewController
  * Method:    stop
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPreviewController_stop
-  (JNIEnv *, jobject);
+JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPlayer_surfaceDestroyed
+  (JNIEnv *, jobject,jlong);
+JNIEXPORT jlong JNICALL
+Java_com_phuket_tour_opengl_renderer_PngPlayer_init(JNIEnv *env, jobject );
 
+JNIEXPORT void JNICALL
+Java_com_phuket_tour_opengl_renderer_PngPlayer_nativeRelease(JNIEnv *env, jobject ,jlong);
 #ifdef __cplusplus
 }
 #endif
 #endif
+
+

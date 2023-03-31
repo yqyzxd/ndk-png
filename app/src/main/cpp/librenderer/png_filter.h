@@ -13,6 +13,7 @@ class PngFilter : public BaseFilter{
 public:
     PngFilter(const char *vertexSource, const char *fragmentSource);
     virtual GLuint onDrawFrame(GLuint textureId);
+    virtual void dealloc();
 private:
     GLint  mPositionLocation;
     GLint  mCoordLocation;

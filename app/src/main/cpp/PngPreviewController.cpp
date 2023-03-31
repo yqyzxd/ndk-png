@@ -8,41 +8,53 @@
 #include "png_player.h"
 
 
-static ANativeWindow *window = 0;
+//static ANativeWindow *window = 0;
 //static PicPreviewController *controller = 0;
-static PngPlayer* player=0;
-JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPreviewController_init
-(JNIEnv * env, jobject obj, jstring pngFilePathParam,jobject jmgr) {
+//static PngPlayer* player=0;
+
+extern "C"
+JNIEXPORT jlong JNICALL
+Java_com_phuket_tour_opengl_renderer_PngPlayer_init(JNIEnv *env, jobject thiz) {
+	PngPlayer *player=new PngPlayer();
+	return reinterpret_cast<jlong>(player);
+}
+
+JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPlayer_setDataSource
+(JNIEnv * env, jobject obj,jlong handle, jstring pngFilePathParam,jobject jmgr) {
 	//controller = new PicPreviewController();
-	player=new PngPlayer();
+	//player=new PngPlayer();
+	PngPlayer *player= reinterpret_cast<PngPlayer *>(handle);
 	char* pngFilePath = (char*) env->GetStringUTFChars(pngFilePathParam, NULL);
 	player->setAssetSource(AAssetManager_fromJava(env,jmgr),pngFilePath);
 	//controller->start(AAssetManager_fromJava(env,jmgr),pngFilePath);
 	env->ReleaseStringUTFChars(pngFilePathParam, pngFilePath);
 }
 
-JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPreviewController_setSurface
-(JNIEnv * env, jobject obj, jobject surface) {
+JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPlayer_surfaceCreated
+(JNIEnv * env, jobject obj,jlong handle, jobject surface) {
+	PngPlayer *player= reinterpret_cast<PngPlayer *>(handle);
 	if (surface != 0 && NULL != player) {
-		window = ANativeWindow_fromSurface(env, surface);
-		//controller->setWindow(window);
+		ANativeWindow * window = ANativeWindow_fromSurface(env, surface);
 		player->surfaceCreated(window);
-	} else if (window != 0) {
-		LOGI("Releasing window");
-		ANativeWindow_release(window);
-		window = 0;
 	}
 }
 
-JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPreviewController_resetSize
-(JNIEnv * env, jobject obj, jint width, jint height) {
+JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPlayer_surfaceChanged
+(JNIEnv * env, jobject obj,jlong handle, jint width, jint height) {
 	//controller->resetSize(width,height);
+	PngPlayer *player= reinterpret_cast<PngPlayer *>(handle);
 	player->surfaceChanged(width,height);
 }
 
-JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPreviewController_stop
-(JNIEnv * env, jobject obj) {
+JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPlayer_surfaceDestroyed
+(JNIEnv * env, jobject obj,jlong handle) {
 	//controller->stop();
+	PngPlayer *player= reinterpret_cast<PngPlayer *>(handle);
 	player->surfaceDestroyed();
 
+}
+
+JNIEXPORT void JNICALL Java_com_phuket_tour_opengl_renderer_PngPlayer_nativeRelease(JNIEnv * env, jobject obj,jlong handle){
+	PngPlayer *player= reinterpret_cast<PngPlayer *>(handle);
+	player->dealloc();
 }

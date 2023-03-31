@@ -19,3 +19,11 @@ void BaseFilter::onReady(int width, int height) {
     mWidth=width;
     mHeight=height;
 }
+
+void BaseFilter::dealloc() {
+
+    if (mProgram) {
+        glDeleteProgram(mProgram);
+        mProgram = 0;
+    }
+}

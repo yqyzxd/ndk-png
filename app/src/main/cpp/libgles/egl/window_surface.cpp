@@ -19,12 +19,13 @@ WindowSurface::~WindowSurface() {
 }
 void WindowSurface::release() {
     releaseEglSurface();
-    if (mSurface!=NULL){
+    if (mSurface){
         ANativeWindow_release(mSurface);
         mSurface=NULL;
     }
     if (mEGLCore){
         mEGLCore->release();
+        delete mEGLCore;
         mEGLCore=NULL;
     }
 

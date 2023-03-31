@@ -13,11 +13,6 @@ PngRenderer::~PngRenderer()  {
 
 void PngRenderer::surfaceCreated() {
     LOGE("start surfaceCreated");
-
-
-}
-
-void PngRenderer::surfaceChanged(int width, int height) {
     char* vertexSource=
             "attribute vec4 a_Position;    \n"
             "attribute vec2 a_Coord;   \n"
@@ -40,6 +35,11 @@ void PngRenderer::surfaceChanged(int width, int height) {
         texture=new Texture();
         texture->createTexture();
     }
+
+}
+
+void PngRenderer::surfaceChanged(int width, int height) {
+
     glClearColor(1.0f,1.0f,0.0f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     LOGE("surfaceChanged onReady");
@@ -52,6 +52,16 @@ void PngRenderer::surfaceChanged(int width, int height) {
 }
 
 void PngRenderer::surfaceDestroyed() {
+    if (pngFilter){
+        delete pngFilter;
+        pngFilter=NULL;
+    }
+
+    if (texture){
+        texture->dealloc();
+        delete texture;
+        texture=NULL;
+    }
 
 }
 

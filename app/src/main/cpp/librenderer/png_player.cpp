@@ -49,6 +49,19 @@ void PngPlayer::setAssetSource(AAssetManager *mgr, char *path) {
 
 }
 
+void PngPlayer::dealloc() {
+    if (decoder){
+        delete decoder;
+        decoder=NULL;
+    }
+
+    if (glSurface){
+        glSurface->dealloc();
+        delete glSurface;
+        glSurface=NULL;
+    }
+}
+
 
 
 

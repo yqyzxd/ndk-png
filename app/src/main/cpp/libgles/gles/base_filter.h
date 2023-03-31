@@ -15,7 +15,7 @@ public:
     void onReady(int width,int height);
 
     virtual GLuint onDrawFrame(GLuint textureId)=0;
-
+    virtual void dealloc();
 protected:
     GLuint mProgram;
     int mWidth;

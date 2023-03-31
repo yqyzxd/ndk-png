@@ -20,6 +20,9 @@ public:
     void surfaceCreated(ANativeWindow* window);
     void surfaceChanged(int width,int height);
     void surfaceDestroyed();
+
+    void dealloc();
+
 private:
     GLSurface* glSurface=0;
     PngDecoder* decoder=0;
