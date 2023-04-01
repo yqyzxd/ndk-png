@@ -1,19 +1,12 @@
-package com.phuket.tour.opengl.renderer;
+package com.wind.ndk.png;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-
-import com.wind.ndk.png.R;
-
-import java.io.File;
 
 public class MainActivity extends Activity {
 
@@ -21,13 +14,13 @@ public class MainActivity extends Activity {
 	static {
 		System.loadLibrary("native");
 	}
-	private Button go_btn;
+	private Button btn;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		go_btn = (Button) findViewById(R.id.go_btn);
-		go_btn.setOnClickListener(new OnClickListener() {
+		btn = (Button) findViewById(R.id.btn);
+		btn.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {

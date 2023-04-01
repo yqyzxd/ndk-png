@@ -2,8 +2,6 @@
 <resources>
 
     <string name="app_name">ndk-png</string>
-    <string name="display">Display Png</string>
-    <string name="go">Go!</string>
-    <string name="action_settings">Settings</string>
+
 
 </resources>

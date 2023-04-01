@@ -19,8 +19,7 @@ add_library(
 
         SHARED
 
-        com_phuket_tour_opengl_renderer_PngPreviewController.h
-        PngPreviewController.cpp
+        com_wind_ndk_png_PngPlayer.cpp
 )
 
 
@@ -30,11 +29,9 @@ target_link_libraries(
         # Links the target library to the log library
         # included in the NDK.
         android
-        jnigraphics
+
         pngdecoder
         eglcore
         renderer
-        z
         log
-        GLESv2
-        EGL)
+       )
